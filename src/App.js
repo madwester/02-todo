@@ -60,6 +60,18 @@ class App extends Component {
 
   render() {
     const { items, newTodo, filter } = this.state;
+    const filterItems = items.filter(item => {
+      switch (filter) {
+        case 'active':
+          return !item.completed;
+        break;
+        case 'completed':
+          return item.completed;
+        default:
+          return true;
+      }
+    })
+
     return (
       <div className="App">
       <form onSubmit={this.addNewTodo}>
@@ -70,19 +82,7 @@ class App extends Component {
       <label>Active</label><input onChange={this.onChange} name="filter" type="radio" value="active" checked={filter === 'active'} />
       <label>Completed</label><input onChange={this.onChange} name="filter" type="radio" value="completed" checked={filter === 'completed'} />
         <ul>
-          {items
-            .filter(item => {
-              switch (filter) {
-                case 'active':
-                  return !item.completed;
-                break;
-                case 'completed':
-                  return item.completed;
-                default:
-                  return true;
-              }
-            })
-          .map(item =>
+          {filterItems.map(item =>
           <li>
             <input name="completed" onChange={(event) => this.onItemChange(item.id, event)} type="checkbox" checked={item.completed}></input>
             <input name="text" onChange={(event) => this.onItemChange(item.id, event)} value={item.text}></input>
